@@ -1,12 +1,12 @@
 import { ArrowLeft, ArrowRight, X } from 'lucide-react'
-import { useEffect, useRef, type KeyboardEvent, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react'
 import { useQuote } from '../../context/QuoteContext'
 import type { PortfolioItem } from '../../data/portfolio'
 import { services } from '../../data/services'
 import { useScrollLock } from '../../hooks/useScrollState'
 import { keepHyphens } from '../../lib/text'
 import { buttonClasses, buttonIconClasses } from '../ui/button'
-import { ConceptTag, PortfolioMedia, toneClasses } from './PortfolioMedia'
+import { ResponsivePhoto } from '../ui/ResponsivePhoto'
 
 interface PortfolioPreviewProps {
   items: PortfolioItem[]
@@ -92,14 +92,12 @@ export function PortfolioPreview({ items, index, onNavigate, onClose }: Portfoli
             <X aria-hidden="true" className="size-5" />
           </button>
 
-          <div className={`relative aspect-[5/4] md:aspect-auto md:min-h-[min(36rem,70dvh)] ${toneClasses[item.tone]}`}>
-            <PortfolioMedia item={item} lazy={false} sizes="(min-width: 768px) 60vw, 100vw" className="absolute inset-0 h-full w-full" />
-            {item.kind === 'concept' ? <ConceptTag className="absolute top-4 left-4" /> : null}
-          </div>
+          {/* Keyed by project so the gallery starts at the cover each time. */}
+          <PreviewGallery key={item.id} item={item} />
 
           <div className="flex flex-col p-6 sm:p-8 lg:p-10">
             <p className="eyebrow text-muted">
-              <span className="text-accent">
+              <span className="text-bronze">
                 {String(index! + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
               </span>
               <span aria-hidden="true" className="h-px w-6 bg-current opacity-40" />
@@ -109,12 +107,6 @@ export function PortfolioPreview({ items, index, onNavigate, onClose }: Portfoli
               {item.title}
             </h2>
             <p className="mt-4 text-[1.0625rem] leading-relaxed text-pretty text-muted">{keepHyphens(item.description)}</p>
-
-            {item.kind === 'concept' ? (
-              <p className="mt-6 border-l-2 border-accent pl-3.5 text-sm leading-relaxed text-muted">
-                Illustrative concept mockup created for this website. It is not a client commission.
-              </p>
-            ) : null}
 
             <div className="mt-8 flex flex-col gap-6 md:mt-auto md:pt-10">
               <a href="#contact" onClick={startSimilar} className={buttonClasses('primary')}>
@@ -144,5 +136,45 @@ export function PortfolioPreview({ items, index, onNavigate, onClose }: Portfoli
         </div>
       ) : null}
     </dialog>
+  )
+}
+
+/** The large photo, uncropped on a dark mat, with thumbnails for the rest of the job. */
+function PreviewGallery({ item }: { item: PortfolioItem }) {
+  const photos = [item.cover, ...(item.gallery ?? [])]
+  const [current, setCurrent] = useState(0)
+  const photo = photos[current]
+
+  return (
+    <div className="flex flex-col bg-ink">
+      <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[min(36rem,64dvh)] md:flex-1">
+        <ResponsivePhoto
+          key={photo.base}
+          image={photo}
+          eager
+          sizes="(min-width: 76rem) 44rem, (min-width: 48rem) 58vw, calc(100vw - 1.5rem)"
+          className="absolute inset-0 h-full w-full object-contain"
+        />
+      </div>
+      {photos.length > 1 ? (
+        <ul className="flex gap-2 overflow-x-auto p-3" aria-label="Photos of this project">
+          {photos.map((thumb, i) => (
+            <li key={thumb.base} className="shrink-0">
+              <button
+                type="button"
+                onClick={() => setCurrent(i)}
+                aria-pressed={i === current}
+                aria-label={`Photo ${i + 1} of ${photos.length}: ${thumb.alt}`}
+                className={`photo-frame block size-14 outline-offset-2 transition-opacity sm:size-16 ${
+                  i === current ? 'opacity-100 ring-2 ring-accent-light' : 'opacity-60 hover:opacity-100'
+                }`}
+              >
+                <ResponsivePhoto image={thumb} alt="" eager sizes="4rem" className="absolute inset-0 h-full w-full object-cover" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
   )
 }

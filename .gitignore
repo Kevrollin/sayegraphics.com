@@ -11,3 +11,9 @@ dist-ssr
 .DS_Store
 Thumbs.db
 *.log
+
+# Owner's original uploads (150 MB of WhatsApp photos, videos and PDFs).
+# Kept locally as the source for `npm run media`, `npm run logo` and
+# `npm run videos`; the optimised copies in public/assets/optimized are
+# what the site uses.
+assets-src/originals/

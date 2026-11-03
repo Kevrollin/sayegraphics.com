@@ -4,7 +4,7 @@ import { SectionHeading } from './ui/SectionHeading'
 
 export function Process() {
   return (
-    <section id="process" aria-labelledby="process-title" className="bg-paper-deep py-20 md:py-28">
+    <section id="process" aria-labelledby="process-title" className="render-on-approach bg-paper-deep py-20 md:py-28">
       <div className="container-page">
         <SectionHeading
           id="process-title"

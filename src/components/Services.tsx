@@ -4,37 +4,38 @@ import { useQuote } from '../context/QuoteContext'
 import { services } from '../data/services'
 import { whatsappChatHref } from '../lib/links'
 import { keepHyphens } from '../lib/text'
-import { ServiceIllustration } from './art/ServiceIllustration'
+import { ResponsivePhoto } from './ui/ResponsivePhoto'
 import { SectionHeading } from './ui/SectionHeading'
 
 export function Services() {
   const { requestService } = useQuote()
 
   return (
-    <section id="services" aria-labelledby="services-title" className="border-t border-line py-20 md:py-28 lg:py-32">
+    <section id="services" aria-labelledby="services-title" className="render-on-approach border-t border-line py-20 md:py-28 lg:py-32">
       <div className="container-page">
         <SectionHeading
           id="services-title"
           index="01"
           label="Services"
           title="What We Do"
-          intro="Creative solutions, thoughtfully designed and professionally produced."
+          intro="From a business card to a full shopfront: designed, produced and installed for you."
         />
 
-        <ul className="mt-12 grid gap-4 sm:grid-cols-2 md:mt-16 lg:grid-cols-4 lg:gap-5">
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 md:mt-16 lg:grid-cols-3 lg:gap-5">
           {services.map((service, index) => (
             <li
               key={service.id}
               data-reveal
-              style={{ '--reveal-delay': `${index * 70}ms` } as CSSProperties}
+              style={{ '--reveal-delay': `${(index % 3) * 70}ms` } as CSSProperties}
             >
               <article className="group relative flex h-full flex-col border border-line bg-paper-raised transition-colors duration-300 hover:border-ink/30">
-                <div className="relative aspect-[2/1] overflow-hidden border-b border-line bg-paper-deep sm:aspect-[16/10]">
-                  <ServiceIllustration
-                    id={service.id}
-                    className="absolute inset-0 m-auto h-[80%] w-[80%] transition-transform duration-700 ease-out-quint group-hover:scale-[1.05]"
+                <div className="photo-frame aspect-[4/3] border-b border-line">
+                  <ResponsivePhoto
+                    image={service.image}
+                    sizes="(min-width: 86rem) 25rem, (min-width: 64rem) 30vw, (min-width: 40rem) 46vw, calc(100vw - 2.5rem)"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out-quint group-hover:scale-[1.04]"
                   />
-                  <span className="absolute top-4 left-4 text-xs font-bold tracking-[0.14em] text-muted">
+                  <span className="absolute top-4 left-4 grid h-7 min-w-9 place-items-center rounded-full bg-paper-raised/90 px-2 text-xs font-bold tracking-[0.1em] text-bronze">
                     0{index + 1}
                   </span>
                 </div>

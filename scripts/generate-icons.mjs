@@ -1,26 +1,30 @@
-// Builds the PNG icons from public/favicon.svg:
+// Builds the site icons from the official emblem
+// (public/assets/optimized/brand/saye-graphics-mark.svg, made by logo-to-svg.mjs):
+//   public/favicon.svg           emblem on a paper tile (visible on light and dark tabs)
 //   public/favicon-32.png        browser tab fallback
 //   public/apple-touch-icon.png  iOS home screen (180 x 180, full bleed)
 //
-// When the official logo arrives, replace public/favicon.svg and run:
-//   npm run icons
-import { readFile } from 'node:fs/promises'
+// Run with: npm run icons
+import { readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 
 const publicDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'public')
-const svg = await readFile(join(publicDir, 'favicon.svg'))
+const PAPER = '#F7F6F2'
 
-await sharp(svg, { density: 384 }).resize(32, 32).png().toFile(join(publicDir, 'favicon-32.png'))
+const mark = await readFile(join(publicDir, 'assets', 'optimized', 'brand', 'saye-graphics-mark.svg'), 'utf8')
+const viewBox = /viewBox="([^"]+)"/.exec(mark)[1]
+const inner = mark.replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')
 
-// iOS applies its own rounded mask, so the touch icon is a full square with
-// the mark inset on the same background colour.
-const background = (/<rect[^>]*fill="(#[0-9a-fA-F]{3,8})"/.exec(svg.toString()) ?? [])[1] ?? '#17191C'
-const mark = await sharp(svg, { density: 1152 }).resize(140, 140).png().toBuffer()
-await sharp({ create: { width: 180, height: 180, channels: 4, background } })
-  .composite([{ input: mark, gravity: 'centre' }])
-  .png()
-  .toFile(join(publicDir, 'apple-touch-icon.png'))
+const tile = (size, radius, inset) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}"><rect width="${size}" height="${size}" rx="${radius}" fill="${PAPER}"/><svg x="${inset}" y="${inset}" width="${size - inset * 2}" height="${size - inset * 2}" viewBox="${viewBox}">${inner}</svg></svg>\n`
 
-console.log('Wrote public/favicon-32.png and public/apple-touch-icon.png')
+const favicon = tile(64, 14, 3)
+await writeFile(join(publicDir, 'favicon.svg'), favicon)
+await sharp(Buffer.from(favicon), { density: 384 }).resize(32, 32).png().toFile(join(publicDir, 'favicon-32.png'))
+
+// iOS applies its own rounded mask, so the touch icon is a full square.
+await sharp(Buffer.from(tile(180, 0, 18)), { density: 288 }).resize(180, 180).png().toFile(join(publicDir, 'apple-touch-icon.png'))
+
+console.log('Wrote public/favicon.svg, public/favicon-32.png and public/apple-touch-icon.png')

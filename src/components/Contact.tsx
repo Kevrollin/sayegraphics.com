@@ -53,7 +53,7 @@ export function Contact() {
   const { phone, openingHours } = business
 
   return (
-    <section id="contact" aria-labelledby="contact-title" className="py-20 md:py-28 lg:py-32">
+    <section id="contact" aria-labelledby="contact-title" className="render-on-approach py-20 md:py-28 lg:py-32">
       <div className="container-page grid gap-14 lg:grid-cols-12 lg:gap-16 xl:gap-20">
         <div className="lg:col-span-5">
           <SectionHeading

@@ -2,9 +2,10 @@
  * Saye Graphics Ltd — central business profile.
  *
  * Every customer-facing detail that may change lives here: contact numbers,
- * address, the Google listing, opening hours, social profiles and the logo.
+ * address, the Google listing, opening hours and social profiles.
  * Components, the quote form, SEO tags and structured data all read from this
- * file, so an update here updates the whole site.
+ * file, so an update here updates the whole site. Logo files, photos and
+ * videos are in media.ts.
  *
  * Sources and confirmation status: research/FACTS_AND_SOURCES.md
  */
@@ -18,19 +19,19 @@ export interface SocialProfile {
   handle: string
 }
 
-export interface BrandLogo {
-  /** Path under /public, e.g. "/assets/brand/saye-graphics-logo.svg". */
-  src: string
-  width: number
-  height: number
-}
-
 export const business = {
   name: 'Saye Graphics Ltd',
   shortName: 'Saye Graphics',
 
   /** Used in the footer, metadata and structured data. */
-  description: 'Graphic design, branding and custom T-shirt and hoodie printing in Nakuru, Kenya.',
+  description:
+    'Signage, vehicle branding, branded apparel, promotional items, graphic design and printing in Nakuru, Kenya.',
+
+  /** From the official logo. */
+  tagline: 'Your Trustworthy & Reliable Partner.',
+
+  /** Year established, from the company profile. */
+  founded: 2016,
 
   phone: {
     display: '+254 741 556 017',
@@ -80,13 +81,15 @@ export const business = {
   openingHours: null as { display: string; schema: string[] } | null,
 
   /**
-   * Official logo. Leave as null to use the temporary "SG" monogram and
-   * wordmark; set it once the owner supplies the original artwork.
+   * The company profile lists "@sayegraphics" on TikTok, Instagram and
+   * Facebook. The profile URLs below follow from that handle but could not be
+   * opened from the build environment; confirm them with the owner.
    */
-  logo: null as BrandLogo | null,
-
-  /** Official social profiles. None could be verified yet, so none are shown. */
-  social: [] as SocialProfile[],
+  social: [
+    { platform: 'Instagram', url: 'https://www.instagram.com/sayegraphics/', handle: '@sayegraphics' },
+    { platform: 'TikTok', url: 'https://www.tiktok.com/@sayegraphics', handle: '@sayegraphics' },
+    { platform: 'Facebook', url: 'https://www.facebook.com/sayegraphics', handle: '@sayegraphics' },
+  ] as SocialProfile[],
 }
 
 export type Business = typeof business

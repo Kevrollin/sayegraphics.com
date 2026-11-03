@@ -1,5 +1,5 @@
 import { business } from '../../data/business'
-import { Monogram } from '../art/Monogram'
+import { brandLockup, brandLockupLight } from '../../data/media'
 
 interface LogoProps {
   /** "dark" for light backgrounds, "light" for dark backgrounds. */
@@ -8,35 +8,21 @@ interface LogoProps {
 }
 
 /**
- * Uses the official logo once business.logo is set; until then, the temporary
- * SG monogram with a typographic wordmark.
+ * The official Saye Graphics logo: emblem and wordmark, converted to SVG from
+ * the supplied artwork. The full-colour version sits on light backgrounds; on
+ * dark ones a single-colour paper version keeps it legible.
  */
-export function Logo({ tone = 'dark', className = '' }: LogoProps) {
-  if (business.logo) {
-    return (
-      <img
-        src={business.logo.src}
-        width={business.logo.width}
-        height={business.logo.height}
-        alt={business.name}
-        className={`h-9 w-auto ${className}`}
-      />
-    )
-  }
-
-  const dark = tone === 'dark'
+export function Logo({ tone = 'dark', className = 'h-12 w-auto' }: LogoProps) {
+  const logo = tone === 'dark' ? brandLockup : brandLockupLight
   return (
-    <span className={`flex items-center gap-2.5 ${className}`}>
-      <Monogram
-        className="size-9 shrink-0"
-        fill={dark ? 'fill-ink' : 'fill-paper'}
-        stroke={dark ? 'stroke-paper' : 'stroke-ink'}
-      />
-      <span
-        className={`text-[1.0625rem] font-extrabold tracking-[-0.03em] whitespace-nowrap ${dark ? 'text-ink' : 'text-paper'}`}
-      >
-        {business.shortName}
-      </span>
-    </span>
+    <img
+      src={logo.src}
+      width={logo.width}
+      height={logo.height}
+      alt={business.name}
+      // The light version is only used in the footer, far below the fold.
+      loading={tone === 'light' ? 'lazy' : undefined}
+      className={className}
+    />
   )
 }

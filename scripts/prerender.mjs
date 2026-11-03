@@ -45,6 +45,27 @@ if (!html.includes('<!--app-html-->') || !html.includes('<!--head-extra-->')) {
 }
 if (siteUrl) html = html.replace('content="/og-image.jpg"', `content="${siteUrl}/og-image.jpg"`)
 html = html.replace('<!--head-extra-->', head.join('\n    ')).replace('<!--app-html-->', render())
+
+// Inline the stylesheet (about 13 KB gzipped): the first paint no longer waits
+// for a separate render-blocking request.
+const cssTag = /<link rel="stylesheet" crossorigin href="\/static\/([^"]+\.css)">/.exec(html)
+if (cssTag) {
+  const css = await readFile(join(dist, 'static', cssTag[1]), 'utf8')
+  if (css.includes('</style')) throw new Error('Stylesheet cannot be inlined safely')
+  html = html.replace(cssTag[0], `<style>${css}</style>`)
+}
+
+// Hydrate after the first paint. The prerendered page is complete and its
+// links work without JavaScript, so the bundle is requested only once the
+// browser has painted: on a slow connection the hero photo and text get the
+// bandwidth first, and the menu, gallery and form become interactive a moment
+// later.
+const scriptTag = /<script type="module" crossorigin src="(\/static\/[^"]+\.js)"><\/script>/.exec(html)
+if (scriptTag) {
+  html = html
+    .replace(scriptTag[0], '')
+    .replace('</body>', `  <script type="module">requestAnimationFrame(() => setTimeout(() => import('${scriptTag[1]}')))</script>\n  </body>`)
+}
 await writeFile(join(dist, 'index.html'), html)
 
 const robots = allowIndexing

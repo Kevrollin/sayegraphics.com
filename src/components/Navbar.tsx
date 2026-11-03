@@ -85,7 +85,7 @@ export function Navbar() {
       </a>
       <div className="container-page flex h-16 items-center justify-between gap-6 lg:h-20">
         <a href="#home" className="-m-1 rounded-lg p-1" aria-label="Saye Graphics, back to top" onClick={close}>
-          <Logo />
+          <Logo className="h-[3.125rem] w-auto lg:h-16" />
         </a>
 
         <nav aria-label="Primary" className="hidden lg:block">

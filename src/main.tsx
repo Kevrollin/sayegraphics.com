@@ -1,6 +1,6 @@
 import '@fontsource-variable/manrope'
 import './styles/index.css'
-import { StrictMode } from 'react'
+import { startTransition, StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import App from './App'
 
@@ -12,9 +12,13 @@ const app = (
 )
 
 // Production builds ship prerendered HTML (see scripts/prerender.mjs), which
-// React hydrates. The dev server starts with an empty root instead.
+// React hydrates. Hydrating inside a transition lets React work in short
+// slices instead of one long task, so a tap during hydration isn't blocked.
+// The dev server starts with an empty root instead.
 if (root.firstElementChild) {
-  hydrateRoot(root, app)
+  startTransition(() => {
+    hydrateRoot(root, app)
+  })
 } else {
   createRoot(root).render(app)
 }

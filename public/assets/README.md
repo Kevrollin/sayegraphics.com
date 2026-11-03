@@ -1,13 +1,14 @@
 # Site assets
 
-Optimised, web-ready files served by the site. Put **originals** in `assets-src/` and run `npm run images`; the script writes WebP versions here.
+Web-ready files generated from the owner's originals in `assets-src/originals/` (not deployed). Don't edit these by hand; change the script inputs and run them again.
 
-| Folder       | For                                                                     |
-| ------------ | ----------------------------------------------------------------------- |
-| `brand/`     | Official logo files (SVG preferred) and brand marks                     |
-| `portfolio/` | Photos of completed Saye Graphics jobs                                  |
-| `products/`  | Product photos (T-shirts, hoodies and other items Saye Graphics prints) |
-| `workspace/` | The shop, equipment and production process                              |
-| `icons/`     | Any custom icons supplied with the brand guidelines                     |
+| Folder                   | Contents                                                    | Made by                                   |
+| ------------------------ | ----------------------------------------------------------- | ----------------------------------------- |
+| `optimized/brand/`       | Official logo as SVG: full, header lockup, light lockup, emblem | `npm run logo` (from `PDFLOGO.pdf`)    |
+| `optimized/hero/`        | Hero photos (AVIF + WebP, several widths)                   | `npm run media`                           |
+| `optimized/services/`    | Service card photos, cropped 4:3                            | `npm run media`                           |
+| `optimized/portfolio/`   | Portfolio covers and gallery photos                         | `npm run media`                           |
+| `optimized/workspace/`   | About section photo                                         | `npm run media`                           |
+| `optimized/video/`       | Workshop clips (WebM VP9 + MP4 H.264) and poster images     | `npm run videos`                          |
 
-Only use photographs of Saye Graphics' own work. The concept mockups currently on the site are drawn in code (`src/components/art/`) and are labelled as concepts.
+Which photo goes where, and its alt text, is set in `scripts/media-manifest.mjs` and `src/data/media.ts`.

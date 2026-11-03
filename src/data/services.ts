@@ -1,40 +1,61 @@
+import { serviceImages, type Photo } from './media'
+
 /**
  * Services shown in "What We Do", offered in the quote form and listed in the
  * structured data.
  *
- * These four come from what Google reviewers mention. They are provisional
- * until the owner confirms the full service list; add or remove entries here
- * and the rest of the site follows.
+ * Each one is supported by the business's own material: the company profile
+ * (logo design, business collateral, promotional material, outdoor
+ * marketing, signage, banners, roll-ups, teardrops and backdrops), the
+ * services listed on its roll-up banner, and the photos and videos of
+ * finished jobs the owner supplied. See research/IMAGE_SELECTION_REPORT.md.
  */
 
-export type ServiceId = 'graphic-design' | 'branding' | 'tshirt-printing' | 'hoodie-printing'
+export type ServiceId = 'signage' | 'large-format' | 'vehicle-branding' | 'apparel' | 'promotional' | 'design-print'
 
 export interface Service {
   id: ServiceId
   title: string
   summary: string
+  image: Photo
 }
 
 export const services: Service[] = [
   {
-    id: 'graphic-design',
-    title: 'Graphic Design',
-    summary: 'Eye-catching artwork for print and screen, designed around your message.',
+    id: 'signage',
+    title: 'Signage',
+    summary: '3D letters, illuminated and light-box signs, directional signs, door signs and plaques.',
+    image: serviceImages.signage,
   },
   {
-    id: 'branding',
-    title: 'Branding & Identity',
-    summary: 'Logos and visual identities that make your business instantly recognisable.',
+    id: 'large-format',
+    title: 'Large-Format & Outdoor',
+    summary: 'Banners, roll-ups, teardrop flags, backdrops, billboards, street-pole banners and window graphics.',
+    image: serviceImages.largeFormat,
   },
   {
-    id: 'tshirt-printing',
-    title: 'Custom T-Shirt Printing',
-    summary: 'Your design printed on T-shirts for teams, events, businesses or just for you.',
+    id: 'vehicle-branding',
+    title: 'Vehicle Branding',
+    summary: 'Wraps, livery and lettering for cars, vans and ambulances.',
+    image: serviceImages.vehicle,
   },
   {
-    id: 'hoodie-printing',
-    title: 'Custom Hoodie Printing',
-    summary: 'Hoodies printed with your logo or artwork, made to be worn with pride.',
+    id: 'apparel',
+    title: 'Branded Apparel',
+    summary: 'T-shirts, hoodies, polo shirts, caps and reflective vests, printed or embroidered with your logo.',
+    image: serviceImages.apparel,
+  },
+  {
+    id: 'promotional',
+    title: 'Promotional Items',
+    summary: 'Mugs, water bottles, pens, lanyards, umbrellas, key holders and corporate gifts.',
+    image: serviceImages.promotional,
+  },
+  {
+    id: 'design-print',
+    title: 'Design & Print',
+    summary: 'Logos, business cards, letterheads, receipt books, flyers, calendars, labels and wedding cards.',
+    image: serviceImages.print,
   },
 ]
 

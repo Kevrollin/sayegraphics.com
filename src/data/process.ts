@@ -13,7 +13,7 @@ export const processSteps = [
     text: 'We talk through the artwork with you, and you approve the final design before production.',
   },
   {
-    title: 'Production & Collection',
-    text: "Your approved job goes into production, then it's ready for collection, or delivery where agreed.",
+    title: 'Production & Delivery',
+    text: 'Your approved job is produced, then ready for collection, or delivered and installed where agreed.',
   },
 ]

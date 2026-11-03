@@ -1,4 +1,5 @@
 import { business } from '../data/business'
+import { brandLogo } from '../data/media'
 import { services } from '../data/services'
 import { mapsListingHref } from '../lib/links'
 
@@ -6,9 +7,9 @@ import { mapsListingHref } from '../lib/links'
  * schema.org LocalBusiness data, built only from confirmed details.
  *
  * Deliberately left out until the owner confirms them: opening hours, email,
- * geo coordinates, price range and social profiles (sameAs). The Google
- * rating is not marked up as aggregateRating: Google treats a business's own
- * review markup as self-serving and does not show it in results.
+ * geo coordinates and price range. The Google rating is not marked up as
+ * aggregateRating: Google treats a business's own review markup as
+ * self-serving and does not show it in results.
  */
 export function buildStructuredData(siteUrl: string) {
   const { address } = business
@@ -17,6 +18,8 @@ export function buildStructuredData(siteUrl: string) {
     '@type': 'LocalBusiness',
     name: business.name,
     description: business.description,
+    slogan: business.tagline,
+    foundingDate: String(business.founded),
     telephone: business.phone.e164,
     address: {
       '@type': 'PostalAddress',
@@ -36,6 +39,7 @@ export function buildStructuredData(siteUrl: string) {
     data['@id'] = `${siteUrl}/#business`
     data.url = `${siteUrl}/`
     data.image = `${siteUrl}/og-image.jpg`
+    data.logo = `${siteUrl}${brandLogo.src}`
   }
   if (business.email) data.email = business.email
   if (business.openingHours) data.openingHours = business.openingHours.schema

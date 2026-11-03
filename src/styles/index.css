@@ -3,18 +3,19 @@
 /*
  * SAYE GRAPHICS — DESIGN TOKENS
  *
- * Temporary demo palette. Saye Graphics' official brand colours have not been
- * supplied yet; when they are, change the values below. Every component and
- * every illustration (including the concept mockups) reads from these
- * variables, so nothing else needs editing.
+ * Accent colours are taken from the official logo (assets-src/originals/
+ * PDFLOGO.pdf): teal #336B86 and bronze #8A5F35. The neutrals are the warm
+ * paper and ink tones the site was designed with.
  *
  * Contrast notes (WCAG 2.2):
  *   ink on paper ............ 16.6:1
  *   muted on paper .......... 5.7:1  (small body text)
  *   subtle on paper ......... 4.1:1  (icons, rules, large text only)
- *   white on accent ......... 5.9:1
+ *   white on accent ......... 5.9:1  (teal buttons)
  *   accent on paper ......... 5.4:1
- *   accent-light on ink ..... 7.6:1  (links and focus rings on dark sections)
+ *   bronze on paper ......... 5.1:1  (small labels and numbers)
+ *   accent-light on ink ..... 9.2:1  (links and focus rings on dark sections)
+ *   bronze-light on ink ..... 8.1:1
  */
 @theme {
   --color-paper: #f7f6f2;
@@ -32,10 +33,13 @@
   --color-line: #dcd8cf;
   --color-line-strong: #c4bfb4;
 
-  --color-accent: #2456e8;
-  --color-accent-deep: #1a45c6;
-  --color-accent-light: #8fa8f5;
-  --color-accent-soft: #dfe6fb;
+  --color-accent: #336b86;
+  --color-accent-deep: #285669;
+  --color-accent-light: #8fc3d6;
+  --color-accent-soft: #dcebf1;
+
+  --color-bronze: #8a5f35;
+  --color-bronze-light: #d6a874;
 
   /* Form errors: 9.8:1 on paper. */
   --color-danger: #b3261e;
@@ -187,9 +191,21 @@
       linear-gradient(currentColor, currentColor) bottom right / 1px 0.6rem no-repeat;
   }
 
-  /* Soft, single-direction shadow used under the illustrated mockups. */
-  .art-shadow {
-    filter: drop-shadow(0 18px 22px rgb(23 25 28 / 0.14)) drop-shadow(0 3px 4px rgb(23 25 28 / 0.08));
+  /*
+   * Sections below the hero: the browser skips their layout and paint until
+   * they come near the screen, so the first screen renders sooner on slow
+   * phones. `auto` makes it remember each section's real height once seen.
+   */
+  .render-on-approach {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1400px;
+  }
+
+  /* Photo frames: the image's dominant colour (set inline) shows while it loads. */
+  .photo-frame {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
   }
 }
 
@@ -216,11 +232,13 @@
   transition: none;
 }
 
-/* Hero artwork settles into place once on load. */
+/*
+ * Hero photos rise into place once on load. Movement only, no fade: the main
+ * photo can be the largest contentful paint, so it must be visible at once.
+ */
 @keyframes settle {
   from {
-    opacity: 0;
-    translate: 0 1.75rem;
+    translate: 0 1.25rem;
   }
 }
 

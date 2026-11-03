@@ -1,10 +1,10 @@
-# Saye Graphics Ltd: website demo
+# Saye Graphics Ltd: website
 
-A one-page website demo for **Saye Graphics Ltd**, a graphic design, branding and T-shirt/hoodie printing business on Moses Mudavadi Road, Nakuru, Kenya.
+A one-page website for **Saye Graphics Ltd**, a branding, signage and printing business on Moses Mudavadi Road, Nakuru, Kenya (established 2016).
 
-> **Status: demo awaiting the owner's input.** All portfolio visuals are illustrative concept mockups (labelled on the site), the logo and colours are temporary, and the build is `noindex` until a production domain is configured. See [`research/`](research/) for sources and what still needs confirming.
+The site uses the business's own logo and photographs: 38 photos and 4 short workshop clips chosen from the owner's uploads. Research notes, the asset inventory and the selection and performance reports are in [`research/`](research/). The build is `noindex` until a production domain is configured (see Deploying).
 
-**Stack:** React 19, Vite 8, TypeScript 7, Tailwind CSS 4, Lucide icons, self-hosted Manrope font. No backend. The page is prerendered to static HTML at build time and hydrated in the browser.
+**Stack:** React 19, Vite 8, TypeScript 7, Tailwind CSS 4, Lucide icons, self-hosted Manrope font, sharp for image processing. No backend. The page is prerendered to static HTML at build time and hydrated in the browser after its first paint.
 
 ## Quick start
 
@@ -15,58 +15,59 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-| Command             | What it does                                                                  |
-| ------------------- | ----------------------------------------------------------------------------- |
-| `npm run dev`       | Development server with hot reload                                            |
-| `npm run build`     | Type-check, build, prerender the page into `dist/`, write `robots.txt`        |
-| `npm run preview`   | Serve the production build locally (http://localhost:4173)                    |
-| `npm run typecheck` | TypeScript only                                                               |
-| `npm run images`    | Optimise owner photos from `assets-src/` into responsive WebP in `public/assets/` |
-| `npm run icons`     | Rebuild `favicon-32.png` and `apple-touch-icon.png` from `public/favicon.svg` |
+| Command             | What it does                                                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------------ |
+| `npm run dev`       | Development server with hot reload                                                               |
+| `npm run build`     | Type-check, build, prerender the page into `dist/`, write `robots.txt`                           |
+| `npm run preview`   | Serve the production build locally (http://localhost:4173)                                       |
+| `npm run typecheck` | TypeScript only                                                                                  |
+| `npm run media`     | Crop and convert the selected photos to AVIF + WebP (`npm run media -- <key>` for just one)      |
+| `npm run logo`      | Convert the official logo PDF into the SVG logo files                                            |
+| `npm run icons`     | Rebuild `favicon.svg`, `favicon-32.png` and `apple-touch-icon.png` from the logo emblem          |
+| `npm run videos`    | Trim and re-encode the workshop clips (needs Chrome and Playwright; see the script header)       |
+
+The `media`, `logo` and `videos` scripts read the originals in `assets-src/originals/`. Their output is already in `public/assets/optimized/`, so you only need to run them when changing which photos or clips are used.
 
 ## Deploying to Vercel
 
 1. Push the project to a Git repository and import it in Vercel. `vercel.json` already sets the framework (Vite), build command (`npm run build`) and output directory (`dist`). Alternatively, run `npx vercel` from the project folder.
-2. **For the demo**, deploy as is. The page carries `noindex, nofollow` and `robots.txt` disallows crawling, so the unapproved demo stays out of search results.
+2. **For a preview**, deploy as is. The page carries `noindex, nofollow` and `robots.txt` disallows crawling.
 3. **For production**, once the owner approves and a domain is connected, add these environment variables in Vercel and redeploy:
 
-   | Variable         | Example                          | Effect                                                                 |
-   | ---------------- | -------------------------------- | ---------------------------------------------------------------------- |
-   | `SITE_URL`       | `https://www.sayegraphics.co.ke` | Adds the canonical URL, `og:url`, absolute social image URL and JSON-LD `url` |
-   | `ALLOW_INDEXING` | `true`                           | Removes `noindex`, allows crawling and writes `sitemap.xml`            |
+   | Variable         | Example                          | Effect                                                                        |
+   | ---------------- | -------------------------------- | ----------------------------------------------------------------------------- |
+   | `SITE_URL`       | `https://www.sayegraphics.co.ke` | Adds the canonical URL, `og:url`, absolute social image and logo URLs, JSON-LD `url` |
+   | `ALLOW_INDEXING` | `true`                           | Removes `noindex`, allows crawling and writes `sitemap.xml`                   |
 
-`vercel.json` also caches the hashed bundles in `/static/` for a year and adds basic security headers.
+`vercel.json` caches the hashed bundles in `/static/` for a year and the optimised media in `/assets/optimized/` for 30 days, and adds basic security headers.
+
+The 150 MB of original uploads in `assets-src/originals/` are excluded from Git (`.gitignore`) and from Vercel uploads (`.vercelignore`). The build doesn't need them. **Keep a backup of that folder**: it is the only copy of the originals in the project.
 
 ## Where to change things
 
 Everything customer-facing is centralised. You shouldn't need to search through components.
 
-| To change                                         | Edit                                                    |
-| ------------------------------------------------- | ------------------------------------------------------- |
-| Phone, WhatsApp, address, Google listing, rating, hours, email, social links, logo | `src/data/business.ts` |
-| Services (cards, quote form options, structured data) | `src/data/services.ts`                              |
-| Portfolio items                                   | `src/data/portfolio.ts`                                 |
-| "How It Works" steps                              | `src/data/process.ts`                                   |
-| Navigation                                        | `src/data/navigation.ts`                                |
-| Colours, type scale, motion                       | `@theme` block at the top of `src/styles/index.css`     |
-| Page title, description, social preview text      | `index.html`                                            |
-| Social preview image                              | `public/og-image.jpg` (1200 × 630)                      |
-| Favicon                                           | `public/favicon.svg`, then `npm run icons`              |
+| To change                                                       | Edit                                                 |
+| --------------------------------------------------------------- | ---------------------------------------------------- |
+| Phone, WhatsApp, address, Google listing, rating, hours, email, social links, tagline | `src/data/business.ts`        |
+| Which photo or video appears where, and its alt text            | `src/data/media.ts`                                  |
+| How each photo is cropped and which sizes are made              | `scripts/media-manifest.mjs`, then `npm run media`  |
+| Services (cards, quote form options, structured data)           | `src/data/services.ts`                               |
+| Portfolio projects and their galleries                          | `src/data/portfolio.ts`                              |
+| "How It Works" steps                                            | `src/data/process.ts`                                |
+| Navigation                                                      | `src/data/navigation.ts`                             |
+| Colours, type scale, motion                                     | `@theme` block at the top of `src/styles/index.css`  |
+| Page title, description, social preview text                    | `index.html`                                         |
+| Social preview image                                            | Built by `npm run media` into `public/og-image.jpg`  |
 
-### Replacing the temporary logo and colours
+### Adding or swapping a photo
 
-1. Put the official logo in `public/assets/brand/` (SVG preferred).
-2. In `src/data/business.ts`, set `logo: { src: '/assets/brand/<file>.svg', width, height }`. The header and footer switch to it automatically.
-3. Replace `public/favicon.svg` and run `npm run icons`.
-4. Change the colour values in `src/styles/index.css`. The illustrated mockups use the same variables, so they recolour too. Check the contrast notes in that file if the accent changes.
+1. Put the original in `assets-src/originals/`.
+2. Add an entry to `scripts/media-manifest.mjs` with a `key`, folder, descriptive `slug`, optional crop and the widths the layout needs.
+3. Run `npm run media -- <key>`. It writes `public/assets/optimized/<folder>/<slug>-<width>.avif|webp` and updates `src/data/media.generated.ts` with the real dimensions and a placeholder colour.
+4. In `src/data/media.ts`, describe the photo (alt text) and use it in a section, a service or a portfolio project.
 
-### Adding real portfolio photos
-
-1. Put the originals in `assets-src/portfolio/` with descriptive names.
-2. Run `npm run images`. It writes WebP files at 640, 1024 and 1600 px and prints an `image: { … }` line for each photo.
-3. Add an entry to `src/data/portfolio.ts` with `kind: 'project'`, the printed `image` line and a descriptive `alt`. Put real projects first; remove the concepts once enough real work is in.
-
-Photos lazy-load and use `srcset`, so phones download the small version.
+Every photo is served through `ResponsivePhoto` (`src/components/ui/ResponsivePhoto.tsx`): AVIF with a WebP fallback, `srcset`/`sizes`, intrinsic dimensions, the dominant colour as a placeholder, and lazy loading unless marked `priority` (the main hero photo only) or `eager`.
 
 ## How the quote form works
 
@@ -79,43 +80,64 @@ src/
   components/
     Navbar, Hero, Services, Portfolio, About, Process, TrustSection,
     Contact, QuoteForm, Footer, FloatingWhatsApp
-    art/          illustrated mockups (garments, prints, stationery, compositions)
-    portfolio/    portfolio media + accessible preview dialog
-    brand/        logo (official file or temporary monogram)
-    ui/           buttons, section headings, star rating
+    portfolio/    accessible preview dialog with photo gallery
+    brand/        official logo (SVG)
+    ui/           ResponsivePhoto, LoopVideo, buttons, section headings, stars, registration mark
   context/        pre-selects a service in the quote form
-  data/           business, services, portfolio, process, navigation
+  data/           business, media (+ generated sizes), services, portfolio, process, navigation
   hooks/          scroll reveal, header state, active section, scroll lock
   lib/            link builders, enquiry validation/formatting, text helpers
   seo/            LocalBusiness structured data
   styles/         design tokens + base styles
   entry-server.tsx  used by the prerender step only
-scripts/          prerender, image optimisation, icon generation
-public/assets/    brand, portfolio, products, workspace, icons
-assets-src/       owner originals (not deployed)
-research/         facts & sources, owner request, WhatsApp draft, missing assets
+scripts/          prerender, media pipeline + manifest, logo converter, icons, video/ (clip transcoder)
+public/assets/optimized/   brand, hero, services, portfolio, workspace, video
+assets-src/originals/      owner's original uploads (not deployed, not in Git)
+research/         asset inventory, image selection, performance, facts & sources, owner requests
 ```
 
 ## SEO
 
-- Title: *Saye Graphics Ltd | Graphic Design & Printing in Nakuru*, plus a meta description, Open Graph and Twitter card tags.
-- The full page is prerendered into `dist/index.html`, so search engines and link previews see the content without running JavaScript.
-- `LocalBusiness` JSON-LD with name, phone, address, map link and services. Hours, email, social profiles and geo coordinates are added only once confirmed. The Google rating is deliberately **not** marked up as `aggregateRating`: Google treats self-serving review markup as ineligible for rich results.
-- Canonical URL and `sitemap.xml` are generated only when `SITE_URL` is set.
+- Title *Saye Graphics Ltd | Branding, Signage & Printing in Nakuru*, a local meta description, Open Graph and Twitter card tags, and a 1200 × 630 social image (official logo beside the reception-sign photo).
+- The full page is prerendered into `dist/index.html`, so search engines and link previews see the content and images without running JavaScript.
+- `LocalBusiness` JSON-LD: name, slogan, founding year, phone, address, map link, six services, and the social profiles listed in the company profile; logo and image URLs once `SITE_URL` is set. Hours, email and geo coordinates are added only once confirmed. The Google rating is deliberately **not** marked up as `aggregateRating`: Google treats self-serving review markup as ineligible for rich results.
+- Every photo has descriptive alt text written from what it shows; decorative images use empty alt text.
+
+## Performance
+
+Measured before and after this upgrade; full figures and method are in [`research/PERFORMANCE_REPORT.md`](research/PERFORMANCE_REPORT.md).
+
+| Lighthouse, production config                      | Performance | Accessibility | Best Practices | SEO | LCP    | CLS |
+| -------------------------------------------------- | ----------- | ------------- | -------------- | --- | ------ | --- |
+| Mobile, default (simulated slow 4G)                | 96 (94–96)  | 100           | 100            | 100 | 2.68 s | 0   |
+| Mobile, applied throttling                         | 93–96       | 100           | 100            | 100 | 2.0 s  | 0   |
+| Desktop                                            | 100         | 100           | 100            | 100 | 0.56 s | 0   |
+
+First screen: about 245 KB on desktop and 280 KB on a phone, including the three hero photos.
+
+- Hero photo: AVIF, `fetchpriority="high"`, discoverable in the HTML, about 20 KB on a phone.
+- Everything below the first screen loads on approach: lazy photos, video posters as lazy images, videos with `preload="none"` that load only when scrolled to (and never auto-play with reduced motion, Data Saver or a 2G/3G connection).
+- The stylesheet is inlined and the JavaScript is requested only after the first paint, so slow phones show the page before hydrating it.
+- Sections below the hero use `content-visibility: auto`. A side effect: browser "full-page screenshot" tools capture sections that haven't been scrolled into view as blank. Scroll through the page first, or print to PDF, to capture it whole.
 
 ## Quality checks performed
 
-Run against both the development server and the production build, in headless Chromium (Playwright):
+Run against the production build in headless Chrome (Playwright), 3 November 2026:
 
-- **Layouts** at 360, 390, 430, 768, 1024, 1440 and 1920 px: no horizontal overflow at any width.
-- **49 automated interaction checks:** mobile menu (open, focus, focus trap, Escape, scroll lock), navigation anchors and active state, `tel:` / WhatsApp / Google Maps links, portfolio preview (keyboard arrows, Escape, backdrop click, focus return, "Start a similar project"), service pre-selection, form validation and focus handling, and the exact encoded WhatsApp message including `&`, quotes, line breaks and en dashes. All pass.
-- **Console:** no errors or warnings in development or production, including hydration with animations on.
-- **Slow mobile profile** (4× CPU throttle, 1.6 Mbps, 150 ms RTT): first and largest contentful paint about 2.0 s (the headline), cumulative layout shift 0.
-- **JavaScript disabled:** every section and the form still render.
-- **Accessibility:** one `h1`, labelled landmarks, every control and image named, form fields labelled with linked error messages, visible focus styles, `prefers-reduced-motion` respected, WCAG AA contrast for text (ratios in `src/styles/index.css`).
+- **Layouts** at 360, 375, 390, 430, 768, 1024, 1280, 1440 and 1920 px: no horizontal overflow, no broken images, no failed requests, no console errors or warnings.
+- **48 automated checks, all passing:** one `h1` and structured data; one high-priority image (the hero), served as AVIF; lazy loading; alt text and dimensions on every image; no video downloaded on first load; navigation anchors on desktop and mobile; mobile menu; `tel:`, WhatsApp and Instagram links; service pre-selection; portfolio preview (gallery thumbnails, arrow keys, Escape, focus return, "Start a similar project"); videos playing only while visible, pausing off-screen, pause/play button, WebM chosen in Chrome; reduced motion (no autoplay, no video download, play button works); form validation and the exact encoded WhatsApp message; JavaScript disabled (all sections and photos render).
+- **Lighthouse** (mobile and desktop, several runs): see the performance report.
 
-Not tested: real iOS/Android devices and Safari/Firefox engines (only Chromium was available), and the live Google listing and WhatsApp links, which couldn't be opened from the build environment.
+Not tested: real iOS/Android devices and the Safari/Firefox engines (only Chromium-based browsers were available), so the MP4 fallback was verified in Chrome but not in Safari; the live Google listing, WhatsApp and social links, which couldn't be opened from the build environment.
 
 ## Still to confirm with the owner
 
-Logo files, brand colours and guidelines, photos of real work and the workspace, the full service and product list, opening hours, map pin and landmark, social profiles, email, tagline, testimonials (with permission), order process and turnaround, delivery or collection, whether `wa.me/sayegraphicsltd` is their official link, and that the Google rating (4.9, 47 reviews) is current. Details in [`research/MISSING_ASSETS.md`](research/MISSING_ASSETS.md); a ready-to-send request is in [`research/OWNER_WHATSAPP_MESSAGE.md`](research/OWNER_WHATSAPP_MESSAGE.md).
+- Opening hours, email and map pin.
+- Whether the shop address should read **Resma Plaza, Ground Floor, Room G11** (printed on the business's roll-up banner) alongside or instead of Moses Mudavadi Road.
+- That the `@sayegraphics` Instagram, TikTok and Facebook URLs are correct.
+- Permission to name clients (the portfolio describes the work without naming clients).
+- Whether the bank gift-set image (P058) is a photo of a delivered job.
+- Whether `wa.me/sayegraphicsltd` is their official link.
+- That the Google rating (4.9, 47 reviews) is current.
+
+Details in [`research/MISSING_ASSETS.md`](research/MISSING_ASSETS.md).

@@ -2,6 +2,29 @@
 
 Research date: **2 November 2026**. Prepared alongside the website demo in this repository.
 
+## Update, 3 November 2026: material supplied by the owner
+
+The owner supplied the logo (`PDFLOGO.pdf`), a 20-page company profile (`saye company profle.pdf`), 165 photos and 24 videos (now in `assets-src/originals/`). Facts taken from them and now used on the site:
+
+| Fact | Source | Used on site |
+| --- | --- | --- |
+| Established in 2016 | Company profile, "Who are we?" | Hero ("Since 2016"), About, structured data `foundingDate` |
+| Aim: "exceptional quality and creative branding materials … ensuring your business stands out" | Profile, "Our Aim" | About copy |
+| Values: quality and creativity, customer satisfaction, professionalism, transparency, trust | Profile, "Our Values" | About copy |
+| Target market: startups, SMEs, corporate companies, NGOs | Profile, "Target Market" | About copy |
+| Services: personal branding, business collateral & printing, promotional material, logo design, outdoor marketing (billboards), signage, banners & stickers, letterheads, delivery/fee notes, receipts, roll-up banners, teardrops & backdrops, street-pole "boxes" | Profile, services and portfolio pages | Six service groups in `src/data/services.ts` |
+| Digital printing, branding services and sign-board lists (business cards, flyers, receipt books, wedding cards, calendars, label stickers, mugs, pens, T-shirts, umbrellas, key holders, shop branding, backlit signs, window graphics, reflective stickers…) | The business's roll-up banner design (photo P004) | Service summaries |
+| Vehicle branding, embroidery, 3D/illuminated signs, plaques, invitations | The owner's photos and videos | Services and portfolio |
+| Tagline "Your Trustworthy & Reliable Partner." | Logo and profile cover | Footer, structured data `slogan` |
+| Brand colours teal #336B86, bronze #8A5F35 | Logo PDF (exact values from its colour operators) | Site accent colours |
+| Social handle @sayegraphics (TikTok, Instagram, Facebook) | Profile, contact page | Footer links, structured data `sameAs` (URLs to confirm) |
+| Phone +254 741 556017 | Profile and banner | Unchanged (matches) |
+| "Resma Plaza, Ground Floor, Room G11, Nakuru" | Roll-up banner (P004) | **Not used yet.** A web search (3 Nov 2026) found nothing linking Resma Plaza to Moses Mudavadi Road, so the owner should confirm the address |
+
+Not used from the profile: the client logo pages (client relationships not cleared for publication), the stock city photography, and page 2's "EMA strives…" sentence (left over from another company's template).
+
+The sections below are the original research from 2 November and are kept for reference. Where they say an item is missing, the table above supersedes them.
+
 ## How the research was done, and its limits
 
 - **Web search** (general and extended) for every query in the brief, plus searches filtered to Facebook, Instagram, TikTok, X, LinkedIn and Kenyan business directories.

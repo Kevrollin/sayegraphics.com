@@ -15,12 +15,13 @@ export function Footer() {
   useEffect(() => setYear(new Date().getFullYear()), [])
 
   return (
-    <footer className="on-ink bg-ink text-paper">
+    <footer className="render-on-approach on-ink bg-ink text-paper">
       <div className="container-page pt-16 pb-10 md:pt-20">
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-6 lg:col-span-5">
-            <Logo tone="light" />
-            <p className="mt-6 max-w-sm leading-relaxed text-on-ink-muted">{keepHyphens(business.description)}</p>
+            <Logo tone="light" className="h-20 w-auto" />
+            <p className="mt-4 text-sm font-bold tracking-[0.02em] text-bronze-light">{business.tagline}</p>
+            <p className="mt-5 max-w-sm leading-relaxed text-on-ink-muted">{keepHyphens(business.description)}</p>
             <a
               href={whatsappChatHref}
               target="_blank"
@@ -66,7 +67,8 @@ export function Footer() {
               {business.social.map((profile) => (
                 <li key={profile.url}>
                   <a href={profile.url} target="_blank" rel="noopener noreferrer" className={linkClasses}>
-                    {profile.platform} <span className="text-subtle">{profile.handle}</span>
+                    {profile.platform}
+                    <span className="sr-only"> {profile.handle}</span>
                   </a>
                 </li>
               ))}
@@ -78,7 +80,6 @@ export function Footer() {
           <p>
             © {year} {business.name}. All rights reserved.
           </p>
-          <p>Portfolio images are illustrative concepts.</p>
           <a
             href="#home"
             className="inline-flex items-center gap-2 self-start py-1 font-semibold text-on-ink-muted transition-colors hover:text-paper"
